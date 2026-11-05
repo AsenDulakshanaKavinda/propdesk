@@ -9,7 +9,7 @@ class Base(DeclarativeBase):
 
 class Users(Base):
     __tablename__ = "users"
-    
+
     user_id: Mapped[str] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(Text, nullable=False)
     email: Mapped[str] = mapped_column(Text, nullable=False, unique=True)
@@ -23,7 +23,7 @@ class Users(Base):
 
 class RegisterRequests(Base):
     __tablename__ = "register_requests"
-    
+
     request_id: Mapped[str] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(Text, nullable=False)
     email: Mapped[str] = mapped_column(Text, nullable=False)

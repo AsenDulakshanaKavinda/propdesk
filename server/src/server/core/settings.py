@@ -12,9 +12,8 @@ ROOT = Path(__file__).resolve().parent.parent.parent.parent
 
 
 class Secrets(BaseSettings):
-    # print(f"file----------------------------------: {str(ROOT / "server" / ".env")}")
     model_config = SettingsConfigDict(
-        env_file=str(".env"), 
+        env_file=str(".env"),
         extra="ignore"
     )
 
@@ -23,7 +22,7 @@ class Secrets(BaseSettings):
 
     async_db_url: str | None = None
     sync_db_url: str | None = None
-    
+
 
 
 class AppConfig(BaseModel):
