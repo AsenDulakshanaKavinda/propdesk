@@ -1,0 +1,2 @@
+ - how to run auth server - `uv run uvicorn server.auth_service.main:app --port 8001 --reload`
+ - how to run admin server - `uv run uvicorn server.admin_service.main:app --port 8002 --reload`

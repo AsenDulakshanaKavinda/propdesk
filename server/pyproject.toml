@@ -1,0 +1,22 @@
+[project]
+name = "server"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "AsenDulakshnaKavinda", email = "s22010362@ousl.lk" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "alembic>=1.20.1",
+    "email-validator>=2.3.0",
+    "fastapi>=0.162.0",
+    "uvicorn>=0.54.0",
+]
+
+[project.scripts]
+server = "server:main"
+
+[build-system]
+requires = ["uv_build>=0.12.9,<0.13.0"]
+build-backend = "uv_build"
