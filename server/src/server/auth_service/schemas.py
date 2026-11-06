@@ -7,6 +7,7 @@ class RegisterRequest(BaseModel):
     region: str = Field(..., min_length=2, max_length=50, strip_whitespace=True)
     password: str = Field(..., min_length=8, max_length=128)
 
+
 class LoginRequest(BaseModel):
     email: EmailStr = Field(...)
     password: str = Field(..., min_length=8, max_length=128)

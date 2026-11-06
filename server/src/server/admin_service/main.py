@@ -6,6 +6,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from server.admin_service.route.routes import admin_route
 from server.core.settings import Settings, get_settings
 from server.store.conn import DatabaseConn, get_db_session
 
@@ -45,3 +46,6 @@ async def root():
 @app.get("/health")
 async def health():
     return {"health": "ok"}
+
+
+app.include_router(admin_route, prefix="/api/v1")

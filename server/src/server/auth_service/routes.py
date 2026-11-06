@@ -1,43 +1,83 @@
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.exc import SQLAlchemyError
 
-from server.auth_service.schemas import RegisterRequest, LoginRequest
-from server.core.dependencies import get_auth_repo
-from server.store.auth_repo import AuthRepository
-
+from server.auth_service.schemas import LoginRequest, RegisterRequest
+from server.core.dependencies import get_auth_repo, get_current_user
+from server.service.access_token import create_access_token
+from server.service.password import check_password
+from server.store.auth_repo import AuthRepository, UserNotFoundError
 
 auth_route = APIRouter()
 
 
 @auth_route.post("/register-request")
 async def send_register_request(
-    payload: RegisterRequest, 
-    auth_repo: AuthRepository = Depends(get_auth_repo)
+    payload: RegisterRequest, auth_repo: AuthRepository = Depends(get_auth_repo)
 ):
-    """ send a register request """
+    """send a register request"""
     try:
         new_request = await auth_repo.create_register_request(payload)
         return {
             "message": "Registration request submitted successfully",
-            "request_id": new_request.request_id
+            "request_id": new_request.request_id,
         }
     except ValueError as e:
         # handles duplicate email or uniqueness constraint errors from repository
         raise HTTPException(status_code=400, detail=str(e))
-        
+
     except RuntimeError as e:
         # handles general database/SQLAlchemy errors
-        raise HTTPException(status_code=500, detail=f"A database error occurred while processing your request. {str(e)}")
-    
-
-
-
+        raise HTTPException(
+            status_code=500,
+            detail=f"A database error occurred while processing your request. {e!s}",
+        )
 
 
 @auth_route.post("/login")
-async def login(payload: LoginRequest):
-    ...
+async def login(
+    payload: LoginRequest, auth_repo: AuthRepository = Depends(get_auth_repo)
+):
+    try:
+        # 1. find user with give email
+        user = await auth_repo.fetch_user_by_email(payload.email)
+        if user is None:
+            raise HTTPException(status_code=401, detail="Invalid email or password")
+
+        # 2. validate the password
+        is_password_valid = check_password(
+            password=payload.password, hashed_password=user.hashed_password
+        )
+        if not is_password_valid:
+            raise HTTPException(status_code=401, detail="Invalid email or password")
+
+        # 3. create the access token and return the response
+        access_token = create_access_token(data={"sub": user.email})
+
+        return {
+            "access_token": access_token,
+            "token_type": "bearer",
+            "user": {
+                "id": user.user_id,
+                "email": user.email,
+            },
+        }
+
+    except UserNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+    except SQLAlchemyError as e:
+        # Translates database failures to HTTP 500
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@auth_route.get("/me")
+async def get_current_user_profile(current_user=Depends(get_current_user)):
+    return {
+        "id": current_user.user_id,
+        "email": current_user.email,
+        "is_active": current_user.is_active,
+    }
 
 
 @auth_route.get("/refresh")
-async def get_refresh_token():
-    ...
+async def get_refresh_token(): ...

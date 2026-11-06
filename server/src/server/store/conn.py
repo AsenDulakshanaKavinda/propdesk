@@ -3,7 +3,6 @@ from __future__ import annotations
 import asyncio
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import Optional
 
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
@@ -14,20 +13,22 @@ from sqlalchemy.ext.asyncio import (
 
 
 class DatabaseConn:
-    _instance: Optional[DatabaseConn] = None
+    _instance: DatabaseConn | None = None
     _lock: asyncio.Lock = asyncio.Lock()
 
     engine: AsyncEngine
     session_factory: async_sessionmaker[AsyncSession]
 
     @classmethod
-    async def get_instance(cls, db_url: Optional[str] = None) -> DatabaseConn:
+    async def get_instance(cls, db_url: str | None = None) -> DatabaseConn:
         """Async thread/task-safe singleton retriever."""
         if cls._instance is None:
             async with cls._lock:
                 if cls._instance is None:
                     if not db_url:
-                        raise ValueError("Database URL must be provided on first initialization.")
+                        raise ValueError(
+                            "Database URL must be provided on first initialization."
+                        )
 
                     instance = super().__new__(cls)
                     print("Initializing Async SQLAlchemy Engine and SessionFactory...")

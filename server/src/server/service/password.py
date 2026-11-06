@@ -1,5 +1,6 @@
 import bcrypt
 
+
 def create_hashed_password(password: str) -> str:
     """
     create a hashed password from a plain text password
@@ -9,11 +10,12 @@ def create_hashed_password(password: str) -> str:
     returns:
         bytes - the hashed password
     """
-    password_bytes = password.encode('utf-8')
-    hashed_password = bcrypt.hashpw(password_bytes, bcrypt.gensalt()).decode('utf-8')
+    password_bytes = password.encode("utf-8")
+    hashed_password = bcrypt.hashpw(password_bytes, bcrypt.gensalt()).decode("utf-8")
     return hashed_password
 
-def check_password(password: str, hashed_password: bytes) -> bool:
+
+def check_password(password: str, hashed_password: str) -> bool:
     """
     check if a plain text password matches a hashed password
 
@@ -23,5 +25,6 @@ def check_password(password: str, hashed_password: bytes) -> bool:
     returns:
         bool - True if the password matches, False otherwise
     """
-    password_bytes = password.encode('utf-8')
-    return bcrypt.checkpw(password_bytes, hashed_password)
+    password_bytes = password.encode("utf-8")
+    hashed_password_bytes = hashed_password.encode("utf-8")
+    return bcrypt.checkpw(password_bytes, hashed_password_bytes)

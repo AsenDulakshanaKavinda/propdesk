@@ -1,12 +1,11 @@
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-
 from alembic import context
+from sqlalchemy import engine_from_config, pool
 
-from server.store.models import Base
 from server.core import get_settings
+from server.store.models import Base
+
 secrets = get_settings().secrets
 db_url = secrets.sync_db_url
 

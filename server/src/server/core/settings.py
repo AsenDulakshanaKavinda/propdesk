@@ -12,10 +12,7 @@ ROOT = Path(__file__).resolve().parent.parent.parent.parent
 
 
 class Secrets(BaseSettings):
-    model_config = SettingsConfigDict(
-        env_file=str(".env"),
-        extra="ignore"
-    )
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     env: Literal["local", "staging", "prod"]
     log_level: str = "INFO"
@@ -23,6 +20,9 @@ class Secrets(BaseSettings):
     async_db_url: str | None = None
     sync_db_url: str | None = None
 
+    access_token_expire_minutes: int | None = None
+    secret_key: str | None = None
+    algorithm: str | None = None
 
 
 class AppConfig(BaseModel):
@@ -38,7 +38,7 @@ def _yaml(path: Path) -> dict:
     try:
         return yaml.safe_load((path if path.is_absolute() else ROOT / path).read_text())
     except FileNotFoundError:
-        raise FileNotFoundError(f"config file not found: {str(path)}")
+        raise FileNotFoundError(f"config file not found: {path!s}")
 
 
 @lru_cache

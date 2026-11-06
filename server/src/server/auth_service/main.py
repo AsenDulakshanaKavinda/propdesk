@@ -1,10 +1,11 @@
-from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+
+from server.auth_service.routes import auth_route
 from server.core.settings import Settings, get_settings
 from server.store.conn import DatabaseConn
-from server.auth_service.routes import auth_route
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -27,14 +28,14 @@ def get_admin_settings() -> Settings:
     return app.state.settings
 
 
-from server.auth_service.routes import auth_route
-
 @app.get("/")
 async def root():
-    return { "message" : "welcome to auth service"}
+    return {"message": "welcome to auth service"}
+
 
 @app.get("/health")
 async def health():
-    return { "health" : "ok"}
+    return {"health": "ok"}
+
 
 app.include_router(router=auth_route, prefix="/auth/v1")
