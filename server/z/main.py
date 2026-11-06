@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from server.auth_service.routes import auth_route
+from server.auth_service.route.routes import auth_route
 from server.core.settings import Settings, get_settings
 from server.store.conn import DatabaseConn
 

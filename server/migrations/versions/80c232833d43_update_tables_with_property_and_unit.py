@@ -1,20 +1,21 @@
-"""users and register_requests table create
+"""update tables with property and unit
 
-Revision ID: 0e402f585206
+Revision ID: 80c232833d43
 Revises: 
-Create Date: 2026-11-05 08:11:48.287044
+Create Date: 2026-11-06 16:16:04.903121
 
 """
-from collections.abc import Sequence
+from typing import Sequence, Union
 
-import sqlalchemy as sa
 from alembic import op
+import sqlalchemy as sa
+
 
 # revision identifiers, used by Alembic.
-revision: str = '0e402f585206'
-down_revision: str | Sequence[str] | None = None
-branch_labels: str | Sequence[str] | None = None
-depends_on: str | Sequence[str] | None = None
+revision: str = '80c232833d43'
+down_revision: Union[str, Sequence[str], None] = None
+branch_labels: Union[str, Sequence[str], None] = None
+depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
@@ -25,7 +26,8 @@ def upgrade() -> None:
     sa.Column('name', sa.Text(), nullable=False),
     sa.Column('email', sa.Text(), nullable=False),
     sa.Column('hashed_password', sa.Text(), nullable=False),
-    sa.Column('region', sa.Text(), nullable=False),
+    sa.Column('property', sa.Text(), nullable=False),
+    sa.Column('unit', sa.Text(), nullable=False),
     sa.Column('status', sa.Text(), nullable=False),
     sa.Column('requested_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('request_id')
@@ -37,7 +39,8 @@ def upgrade() -> None:
     sa.Column('hashed_password', sa.Text(), nullable=False),
     sa.Column('role', sa.Text(), nullable=False),
     sa.Column('status', sa.Text(), nullable=False),
-    sa.Column('region', sa.Text(), nullable=False),
+    sa.Column('property', sa.Text(), nullable=False),
+    sa.Column('unit', sa.Text(), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('user_id'),

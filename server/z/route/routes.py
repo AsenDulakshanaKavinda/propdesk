@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException
+from server.auth_service.rbac.rbac import require_role
 from sqlalchemy.exc import SQLAlchemyError
 
-from server.auth_service.schemas import LoginRequest, RegisterRequest
-from server.core.dependencies import get_auth_repo, get_current_user
+from server.auth_service.schema.schemas import LoginRequest, RegisterRequest
+from server.core.dependencies import CurrentUser, get_auth_repo, get_current_user
 from server.service.access_token import create_access_token
 from server.service.password import check_password
-from server.store.auth_repo import AuthRepository, UserNotFoundError
+from server.store.repos.auth_repo import AuthRepository, UserNotFoundError
 
 auth_route = APIRouter()
 
@@ -71,13 +72,19 @@ async def login(
 
 
 @auth_route.get("/me")
-async def get_current_user_profile(current_user=Depends(get_current_user)):
+async def get_current_user_profile(current_user: CurrentUser = Depends(get_current_user)):
+    """Standard authenticated route returning user profile details."""
     return {
         "id": current_user.user_id,
+        "name": current_user.name,
         "email": current_user.email,
-        "is_active": current_user.is_active,
+        "status": current_user.status,
+        "role": current_user.role,
+        "permissions": current_user.permissions,
     }
 
 
-@auth_route.get("/refresh")
-async def get_refresh_token(): ...
+@auth_route.get("/admin/dashboard")
+async def admin_dashboard(current_user: CurrentUser = Depends(require_role("admin"))):
+    """Admin-only protected route."""
+    return {"message": f"Welcome to the admin dashboard, {current_user.name}"}

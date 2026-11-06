@@ -17,7 +17,10 @@ class Users(Base):
     hashed_password: Mapped[str] = mapped_column(Text, nullable=False)
     role: Mapped[str] = mapped_column(Text, nullable=False)
     status: Mapped[str] = mapped_column(Text, nullable=False)
-    region: Mapped[str] = mapped_column(Text, nullable=False)
+    # region: Mapped[str] = mapped_column(Text, nullable=False)
+    property: Mapped[str] = mapped_column(Text, nullable=False)
+    unit: Mapped[str] = mapped_column(Text, nullable=False)
+    permission: Mapped[str] = mapped_column(Text, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
@@ -36,7 +39,9 @@ class RegisterRequests(Base):
     name: Mapped[str] = mapped_column(Text, nullable=False)
     email: Mapped[str] = mapped_column(Text, nullable=False)
     hashed_password: Mapped[str] = mapped_column(Text, nullable=False)
-    region: Mapped[str] = mapped_column(Text, nullable=False)
+    # region: Mapped[str] = mapped_column(Text, nullable=False)
+    property: Mapped[str] = mapped_column(Text, nullable=False)
+    unit: Mapped[str] = mapped_column(Text, nullable=False)
     status: Mapped[str] = mapped_column(Text, nullable=False, default="pending")
     requested_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False

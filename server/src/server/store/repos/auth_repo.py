@@ -4,7 +4,8 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from server.auth_service.schemas import RegisterRequest
+
+from server.app.schemas.schema import RegisterRequest
 from server.service import create_hashed_password
 from server.store.models import RegisterRequests as RegisterRequestsModel
 from server.store.models import Users as UsersModel

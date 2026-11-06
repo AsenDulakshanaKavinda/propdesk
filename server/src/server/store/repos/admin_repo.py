@@ -2,7 +2,7 @@ from sqlalchemy import select, update
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from server.admin_service.schema.schemas import RegisterRequestDisposition
+from server.app.schemas import RegisterRequestDisposition
 from server.store.models import RegisterRequests as RegisterRequestsModel
 
 
@@ -14,6 +14,7 @@ class AdminRepository:
     def __init__(self, db: AsyncSession):
         self.db = db
 
+
     async def get_all_register_request(self) -> list[RegisterRequestsModel]:
         """get all register requests"""
         try:
@@ -23,6 +24,8 @@ class AdminRepository:
             raise RuntimeError(
                 f"Database error occurred while fetching request: {e!s}"
             ) from e
+
+
 
     async def filter_all_register_request(
         self, status: str
@@ -39,6 +42,8 @@ class AdminRepository:
             raise RuntimeError(
                 f"Database error occurred while fetching request: {e!s}"
             ) from e
+
+
 
     async def get_register_request_by_id(self, id: str) -> RegisterRequestsModel:
         """get a register request by id"""
